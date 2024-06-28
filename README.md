@@ -7,7 +7,7 @@ synchronize your hitchhiking adventures across your family and friends so they k
 
 ## Features
 
-- [X] **Mobile App Sync**: Synchronization services for[hitchhiking-diary-ios](https://github.com/Sibyx/hitchhiking-diary-ios/)
+- [X] **Mobile App Sync**: Synchronization services for [hitchhiking-diary-ios](https://github.com/Sibyx/hitchhiking-diary-ios/)
 - [ ] **Public dashboard**: Public dashboard to share your journey with your friends and family!
 - [ ] **Story generator**: Image generator for Instagram stories for each day
 
