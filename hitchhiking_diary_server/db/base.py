@@ -1,0 +1,5 @@
+from hitchhiking_diary_server.db.base_class import Base
+from hitchhiking_diary_server.models import User
+from hitchhiking_diary_server.models import Trip
+from hitchhiking_diary_server.models import TripRecord
+from hitchhiking_diary_server.models import Photo

@@ -1,0 +1,40 @@
+[tool.poetry]
+name = "hitchhiking-diary-api"
+version = "0.1.0"
+description = "Hitchhiking diary API"
+authors = ["Jakub Dubec <jakub.dubec@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+fastapi = "^0.111.0"
+alembic = "^1.13.1"
+psycopg = {version = "^3.1.19", extras = ["c"]}
+geoalchemy2 = "^0.15.1"
+pydantic-settings = "^2.3.4"
+python-multipart = "^0.0.9"
+argon2-cffi = "^23.1.0"
+python-jose = "^3.3.0"
+
+[tool.poetry.group.dev.dependencies]
+black = "^24.4.2"
+
+[tool.black]
+line-length = 119
+target-version = ['py312']
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+  | \.github
+  | .env
+  | .venv
+  | data
+)/
+'''
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
