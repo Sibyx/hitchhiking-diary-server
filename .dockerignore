@@ -3,7 +3,7 @@
 .git/
 .venv/
 .stoplight/
-/data/
+data/
 *.DS_Store
 *.pyo
 .editorconfig

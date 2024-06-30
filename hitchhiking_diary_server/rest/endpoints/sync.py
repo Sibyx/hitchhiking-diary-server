@@ -47,7 +47,7 @@ async def sync(
     for item in form.records:
         record = db.query(TripRecord).filter(TripRecord.id == item.id).first()
 
-        location = WKTElement(f'POINT({item.longitude} {item.latitude})', srid=4326)
+        location = WKTElement(f'POINT({item.latitude} {item.longitude})', srid=4326)
 
         if record:
             if record.trip.user_id != user.id:
@@ -83,6 +83,7 @@ async def sync(
 
             if item.updated_at > photo.updated_at:
                 photo.deleted_at = item.deleted_at
+                db.commit()
         else:
             photo = Photo(
                 id=item.id,

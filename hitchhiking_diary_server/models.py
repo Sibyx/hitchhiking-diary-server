@@ -43,12 +43,12 @@ class Trip(Base):
 
 
 class TripRecordType(enum.Enum):
-    interesting = "Interesting"
-    workout = "Workout"
-    camping = "Camping"
-    pickup = "Pickup"
-    dropoff = "Dropoff"
-    story = "Story"
+    interesting = "interesting"
+    workout = "workout"
+    camping = "camping"
+    pickup = "pickup"
+    dropoff = "dropoff"
+    story = "story"
 
 
 class TripRecord(Base):
@@ -81,7 +81,6 @@ class Photo(Base):
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     record_id = Column(UUID(as_uuid=True), ForeignKey("trip_records.id"), nullable=False)
-    checksum = Column(String, nullable=True)
     mime = Column(String, nullable=True)
     path = Column(String, nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)

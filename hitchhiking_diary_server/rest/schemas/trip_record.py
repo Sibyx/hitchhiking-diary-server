@@ -19,8 +19,14 @@ class TripRecordSyncSchema(BaseModel):
 class TripRecordDetailSchema(BaseModel):
     id: UUID
     trip_id: UUID
+    type: str
+    latitude: float
+    longitude: float
+    happened_at: datetime
+    content: str
     created_at: datetime
     updated_at: datetime
+    deleted_at: Optional[datetime] = None
 
     class Config:
         from_attributes = True

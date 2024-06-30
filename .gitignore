@@ -2,3 +2,4 @@
 .idea/
 .env/
 requirements.txt
+data/

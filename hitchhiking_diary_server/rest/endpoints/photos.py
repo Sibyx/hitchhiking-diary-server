@@ -1,6 +1,7 @@
-import hashlib
+import mimetypes
 import os
 import shutil
+import uuid
 
 from fastapi import APIRouter, UploadFile, Depends, HTTPException
 from sqlalchemy.orm import Session
@@ -36,26 +37,15 @@ async def upload_photo(
     if photo.record.trip.user.id != user.id:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Insufficient permissions!")
 
-    trip_upload_location = settings.DATA_DIR / "trips" / photo.record.trip_id
-    os.makedirs(trip_upload_location, exist_ok=True)
-    file_location = trip_upload_location / file.filename
+    trip_upload_location = f"trips/{photo.record.trip_id}"
+    os.makedirs(settings.DATA_DIR / trip_upload_location, exist_ok=True)
+    file_location = f"{trip_upload_location}/{uuid.uuid4()}{mimetypes.guess_extension(file.content_type)}"
 
-    with open(file_location, "wb") as buffer:
+    with open(settings.DATA_DIR / file_location, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
-
-    buf_size = 65536
-    checksum = hashlib.sha256()
-
-    with open(file_location, "rb") as f:
-        while True:
-            data = f.read(buf_size)
-            if not data:
-                break
-            checksum.update(data)
 
     photo.path = file_location
     photo.mime = file.content_type
-    photo.checksum = checksum.hexdigest()
 
     db.commit()
     db.refresh(photo)
@@ -77,7 +67,7 @@ async def download_photo(
     if photo.record.trip.user.id != user.id:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Insufficient permissions!")
 
-    return FileResponse(photo.path, media_type=photo.mime)
+    return FileResponse(settings.DATA_DIR / photo.path, media_type=photo.mime)
 
 
 @router.delete("/photos/{photo_id}")

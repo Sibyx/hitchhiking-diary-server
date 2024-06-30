@@ -1,8 +1,8 @@
-"""Initial migration
+"""Initial
 
-Revision ID: e2c7d9e721e6
+Revision ID: f5dbc85a95f8
 Revises: 
-Create Date: 2024-06-27 20:24:20.777569
+Create Date: 2024-06-28 17:20:16.760038
 
 """
 
@@ -13,7 +13,7 @@ import sqlalchemy as sa
 from geoalchemy2 import Geometry
 
 # revision identifiers, used by Alembic.
-revision: str = "e2c7d9e721e6"
+revision: str = "f5dbc85a95f8"
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -40,6 +40,7 @@ def upgrade() -> None:
         sa.Column("status", sa.Enum("draft", "in_progress", "archived", name="tripstatus"), nullable=False),
         sa.Column("created_at", sa.DateTime(timezone=True), server_default=sa.text("now()"), nullable=False),
         sa.Column("updated_at", sa.DateTime(timezone=True), server_default=sa.text("now()"), nullable=False),
+        sa.Column("deleted_at", sa.DateTime(timezone=True), nullable=True),
         sa.ForeignKeyConstraint(
             ["user_id"],
             ["users.id"],
@@ -68,8 +69,10 @@ def upgrade() -> None:
             ),
             nullable=False,
         ),
+        sa.Column("happened_at", sa.DateTime(timezone=True), nullable=False),
         sa.Column("created_at", sa.DateTime(timezone=True), server_default=sa.text("now()"), nullable=False),
         sa.Column("updated_at", sa.DateTime(timezone=True), server_default=sa.text("now()"), nullable=False),
+        sa.Column("deleted_at", sa.DateTime(timezone=True), nullable=True),
         sa.ForeignKeyConstraint(
             ["trip_id"],
             ["trips.id"],
@@ -88,10 +91,11 @@ def upgrade() -> None:
         "photos",
         sa.Column("id", sa.UUID(), nullable=False),
         sa.Column("record_id", sa.UUID(), nullable=False),
-        sa.Column("checksum", sa.String(), nullable=False),
-        sa.Column("mime", sa.String(), nullable=False),
-        sa.Column("path", sa.String(), nullable=False),
+        sa.Column("mime", sa.String(), nullable=True),
+        sa.Column("path", sa.String(), nullable=True),
         sa.Column("created_at", sa.DateTime(timezone=True), server_default=sa.text("now()"), nullable=False),
+        sa.Column("updated_at", sa.DateTime(timezone=True), server_default=sa.text("now()"), nullable=False),
+        sa.Column("deleted_at", sa.DateTime(timezone=True), nullable=True),
         sa.ForeignKeyConstraint(
             ["record_id"],
             ["trip_records.id"],

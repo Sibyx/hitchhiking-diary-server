@@ -16,9 +16,9 @@ class PhotoSyncSchema(BaseModel):
 class PhotoDetailSchema(BaseModel):
     id: UUID
     record_id: UUID
-    checksum: Optional[str]
     mime: Optional[str]
     created_at: datetime
+    updated_at: datetime
     deleted_at: Optional[datetime]
 
     class Config:
