@@ -54,11 +54,7 @@ async def upload_photo(
 
 
 @router.get("/photos/{photo_id}")
-async def download_photo(
-    photo_id: UUID,
-    db: Session = Depends(get_db),
-    user: User = Depends(get_current_user)
-):
+async def download_photo(photo_id: UUID, db: Session = Depends(get_db), user: User = Depends(get_current_user)):
     photo = db.query(Photo).filter(Photo.id == photo_id).first()
 
     if not photo:
@@ -71,11 +67,7 @@ async def download_photo(
 
 
 @router.delete("/photos/{photo_id}")
-async def delete_photo(
-    photo_id: UUID,
-    db: Session = Depends(get_db),
-    user: User = Depends(get_current_user)
-):
+async def delete_photo(photo_id: UUID, db: Session = Depends(get_db), user: User = Depends(get_current_user)):
     photo = db.query(Photo).filter(Photo.id == photo_id).first()
 
     if not photo:

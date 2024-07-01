@@ -38,7 +38,7 @@ async def sync(
                 user_id=user.id,
                 status=item.status,
                 content=item.content,
-                deleted_at=item.deleted_at
+                deleted_at=item.deleted_at,
             )
             db.add(trip)
             db.commit()
@@ -47,7 +47,7 @@ async def sync(
     for item in form.records:
         record = db.query(TripRecord).filter(TripRecord.id == item.id).first()
 
-        location = WKTElement(f'POINT({item.latitude} {item.longitude})', srid=4326)
+        location = WKTElement(f"POINT({item.latitude} {item.longitude})", srid=4326)
 
         if record:
             if record.trip.user_id != user.id:
@@ -68,7 +68,7 @@ async def sync(
                 location=location,
                 content=item.content,
                 happened_at=item.happened_at,
-                deleted_at=item.deleted_at
+                deleted_at=item.deleted_at,
             )
             db.add(record)
             db.commit()
@@ -85,11 +85,7 @@ async def sync(
                 photo.deleted_at = item.deleted_at
                 db.commit()
         else:
-            photo = Photo(
-                id=item.id,
-                record_id=item.record_id,
-                deleted_at=item.deleted_at
-            )
+            photo = Photo(id=item.id, record_id=item.record_id, deleted_at=item.deleted_at)
             db.add(photo)
             db.commit()
 
@@ -102,8 +98,4 @@ async def sync(
         records = records.filter(TripRecord.updated_at >= form.last_sync_at)
         photos = photos.filter(or_(Photo.created_at >= form.last_sync_at, Photo.deleted_at >= form.last_sync_at))
 
-    return SyncResponseSchema(
-        trips=trips.all(),
-        records=records.all(),
-        photos=photos.all()
-    )
+    return SyncResponseSchema(trips=trips.all(), records=records.all(), photos=photos.all())
