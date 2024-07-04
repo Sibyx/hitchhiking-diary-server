@@ -13,24 +13,37 @@ synchronize your hitchhiking adventures across your family and friends so they k
 
 ## Getting Started
 
-1. **Clone the repository**:
-    ```bash
-    git clone git@github.com:Sibyx/hitchhiking-diary-server.git
-    ```
+### From scratch
 
-2. **Install dependencies with Poetry**:
-    ```bash
-    cd hitchhiking-diary-cloud-sync
-    poetry install
-    ```
+```shell
+# Clone the repository
+git clone git@github.com:Sibyx/hitchhiking-diary-server.git hitchhiking-diary-server
 
-3. **Run the server**:
-    ```bash
-    poetry run uvicorn main:app --reload
-    ```
+# Create environment and install dependencies
+cd hitchhiking-diary-server
+python -m venv .venv
+source .venv/bin/active
+poetry install
 
-Happy Hitchhiking!
+# Create configuration (edit the .env)
+cp .env.example .env
+
+# Run server
+uvicorn main:app --reload
+```
+
+## CLI
+
+The server comes with some CLI to easy setup and maintenance:
+
+| Command                                              | Description        |
+|------------------------------------------------------|--------------------|
+| `python -m hitchhiking_diary_server.cli create-user` | Creates a new user |
+
+```shell
+
+```
 
 ---
 If you enjoy using this project, consider donating! Your donations will go towards therapy sessions because
-I'm an alcoholic and substance abuser and this is my cry for help. Cheers!
+I'm an alcoholic and substance abuser and this is my cry for help. Cheers 🍻!

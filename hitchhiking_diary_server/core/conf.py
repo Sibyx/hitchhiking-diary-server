@@ -10,7 +10,7 @@ class Settings(BaseSettings):
     PGHOST: str
     PGDATABASE: str
     PGUSER: str
-    PGPASSWORD: Optional[str] = Field(default='')
+    PGPASSWORD: Optional[str] = Field(default="")
     PGPORT: Optional[int] = Field(default=5432)
 
     DATA_DIR: Path
@@ -22,7 +22,9 @@ class Settings(BaseSettings):
     @computed_field
     def database_url(self) -> str:
         if self.PGPASSWORD:
-            return f"postgresql+psycopg://{self.PGUSER}:{self.PGPASSWORD}@{self.PGHOST}:{self.PGPORT}/{self.PGDATABASE}"
+            return (
+                f"postgresql+psycopg://{self.PGUSER}:{self.PGPASSWORD}@{self.PGHOST}:{self.PGPORT}/{self.PGDATABASE}"
+            )
         else:
             return f"postgresql+psycopg://{self.PGUSER}@{self.PGHOST}:{self.PGPORT}/{self.PGDATABASE}"
 

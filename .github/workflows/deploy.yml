@@ -1,0 +1,21 @@
+name: Deployment
+
+on:
+  workflow_run:
+    workflows: [ "Docker build" ]
+    types: [ completed ]
+    branches: [ master ]
+
+jobs:
+  explore_hitchhikingdiary_app:
+    runs-on: ubuntu-latest
+    environment: explore.hitchhikingdiary.app
+    steps:
+      - name: Install curl
+        run: |
+          sudo apt install -y curl
+      - name: Call deploy webhook
+        env:
+          WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
+        run: |
+          curl -X POST "$WEBHOOK_URL"

@@ -1,4 +1,4 @@
-FROM python:3.12-slim as builder
+FROM python:3.12-slim AS builder
 
 # System setup
 RUN apt update -y && apt install -y libffi-dev build-essential libsasl2-dev libpq-dev
