@@ -26,13 +26,13 @@ class Settings(BaseSettings):
 
     def __init__(self, *args, **kwargs):
         base_dir = Path(__file__).resolve(strict=True).parent.parent.parent
-        kwargs.setdefault('BASE_DIR', base_dir)
+        kwargs.setdefault("BASE_DIR", base_dir)
 
         with open(base_dir / "pyproject.toml", "rb") as f:
             pyproject = tomllib.load(f)
-            kwargs.setdefault('NAME', pyproject["tool"]["poetry"]["name"])
-            kwargs.setdefault('DESCRIPTION', pyproject["tool"]["poetry"]["description"])
-            kwargs.setdefault('VERSION', pyproject["tool"]["poetry"]["version"])
+            kwargs.setdefault("NAME", pyproject["tool"]["poetry"]["name"])
+            kwargs.setdefault("DESCRIPTION", pyproject["tool"]["poetry"]["description"])
+            kwargs.setdefault("VERSION", pyproject["tool"]["poetry"]["version"])
 
         super().__init__(*args, **kwargs)
 

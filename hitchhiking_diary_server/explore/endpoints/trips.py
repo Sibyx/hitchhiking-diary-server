@@ -21,13 +21,7 @@ async def explore_trip_detail(request: Request, trip_id: UUID, db: Session = Dep
     if not trip:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Trip does not exist!")
 
-    return templates.TemplateResponse(
-        request=request,
-        name="explore/trip.html",
-        context={
-            "trip": trip
-        }
-    )
+    return templates.TemplateResponse(request=request, name="explore/trip.html", context={"trip": trip})
 
 
 @router.get("/photos/{photo_id}")
