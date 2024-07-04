@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from jose import jwt
 from sqlalchemy.orm import Session
 
-from hitchhiking_diary_server.core.conf import settings
+from hitchhiking_diary_server.core import settings
 from hitchhiking_diary_server.db.session import get_db
 from hitchhiking_diary_server.models import User
 from hitchhiking_diary_server.rest.schemas.token import TokenFormSchema, TokenDetailSchema

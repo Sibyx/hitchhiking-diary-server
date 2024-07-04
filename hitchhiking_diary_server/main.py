@@ -1,11 +1,20 @@
 from fastapi import FastAPI
+from starlette.staticfiles import StaticFiles
 
-from hitchhiking_diary_server.rest.endpoints import tokens, users, photos, sync, status
+from hitchhiking_diary_server.core import settings
+from hitchhiking_diary_server.rest.router import router as rest_router
+from hitchhiking_diary_server.explore.router import router as explore_router
 
-app = FastAPI()
+app = FastAPI(
+    title=settings.NAME,
+    version=settings.VERSION,
+    description=settings.DESCRIPTION
+)
 
-app.include_router(tokens.router, prefix="/api/v1", tags=["Tokens"])
-app.include_router(users.router, prefix="/api/v1", tags=["Users"])
-app.include_router(photos.router, prefix="/api/v1", tags=["Photos"])
-app.include_router(sync.router, prefix="/api/v1", tags=["Synchronization"])
-app.include_router(status.router, prefix="/api/v1", tags=["Status"])
+app.mount("/static", StaticFiles(directory=settings.BASE_DIR / 'static'), name="static")
+
+# REST
+app.include_router(rest_router, prefix='/api/v1')
+
+# Explore
+app.include_router(explore_router, tags=['Explore'])

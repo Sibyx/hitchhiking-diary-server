@@ -1785,4 +1785,4 @@ docker = ["uvloop", "wheel"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "77d14a5c41e71bea45f1d5b94461113cf564fb3aeabd8ff24c69d1ea4470d2d9"
+content-hash = "1f8d4448dd1774c0c61a6ad07a45de81ed9ebb188ab0766a0b3c2aab2b0f78b2"

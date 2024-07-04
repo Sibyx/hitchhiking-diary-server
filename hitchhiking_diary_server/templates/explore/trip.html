@@ -1,0 +1,68 @@
+{% extends '_layout/skeleton.html' %}
+
+{% block title %}Hitchhiking Diary{% endblock %}
+
+{% block content %}
+	<div class="d-flex align-items-center p-3 my-3 text-white rounded shadow-sm" style="background: #228B22;">
+		<img class="me-3" src="{{ url_for('static', path='/logo.jpg') }}" alt="Hitchhiking diary" width="64" height="64">
+		<div class="lh-1">
+			<h1 class="mb-0 text-white lh-1">{{ trip.title }}</h1>
+			<small>
+				<i class="bi bi-person"></i>
+				{{ trip.user.username }}
+			</small>
+		</div>
+	</div>
+
+	{% for record in trip.records %}
+		<div class="card" style="width: 36rem; margin: 10px auto;">
+			<div class="card-body">
+				<h5 class="card-title">
+					<i class="bi {{ record.type.icon() }}"></i>
+					{{ record.type.title() }}
+				</h5>
+				{% if record.content %}
+					<p class="card-text mb-0">
+						{{ record.content }}
+					</p>
+				{% endif %}
+				<p class="card-text">
+					<small class="text-body-secondary">{{ record.happened_at }}</small>
+				</p>
+			</div>
+
+			{% if record.photos %}
+				<div id="carousel-{{ record.hash }}" class="carousel slide card-img-top">
+				<div class="carousel-inner">
+					{% for photo in record.photos %}
+						<div class="carousel-item {% if loop.first %}active{% endif %}">
+							<img src="{{ url_for('explore_download_photo', photo_id=photo.id) }}" class="d-block w-100" alt="">
+						</div>
+					{% endfor %}
+				</div>
+
+					<button class="carousel-control-prev" type="button" data-bs-target="#carousel-{{ record.hash }}"
+									data-bs-slide="prev">
+						<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+						<span class="visually-hidden">Previous</span>
+					</button>
+
+					<button class="carousel-control-next" type="button" data-bs-target="#carousel-{{ record.hash }}"
+									data-bs-slide="next">
+						<span class="carousel-control-next-icon" aria-hidden="true"></span>
+						<span class="visually-hidden">Next</span>
+					</button>
+				</div>
+
+				<script>
+					const CarouselElement{{ record.hash }} = document.querySelector('#carousel-{{ record.hash }}');
+
+					const Carousel{{ record.hash }} = new bootstrap.Carousel(CarouselElement{{ record.hash }}, {
+						interval: 2000,
+						touch: false
+					})
+				</script>
+			{% endif %}
+		</div>
+	{% endfor %}
+{% endblock %}

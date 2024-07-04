@@ -3,7 +3,7 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from jose import JWTError, jwt
 from sqlalchemy.orm import Session
 
-from hitchhiking_diary_server.core.conf import settings
+from hitchhiking_diary_server.core import settings
 from hitchhiking_diary_server.db.session import get_db
 from hitchhiking_diary_server.models import User
 
