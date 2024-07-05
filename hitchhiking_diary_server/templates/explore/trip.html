@@ -7,7 +7,7 @@
 	<script src="{{ url_for('static', path='/leaflet-arrowheads.js') }}"></script>
 {% endblock %}
 
-{% block title %}Hitchhiking Diary{% endblock %}
+{% block title %}{{ trip.title }} - Hitchhiking Diary{% endblock %}
 
 {% block content %}
 	<div class="d-flex align-items-center p-3 my-3 text-white rounded shadow-sm" style="background: #228B22;">
@@ -91,8 +91,8 @@
 										<div id="carousel-{{ record.hash }}" class="carousel slide">
 											<div class="carousel-indicators">
 												{% for photo in record.photos %}
-													<button type="button" data-bs-target="#carouselExampleIndicators"
-																	data-bs-slide-to="{{ loop.index }}"
+													<button type="button" data-bs-target="#carousel-{{ record.hash }}"
+																	data-bs-slide-to="{{ loop.index0 }}"
 																	class="{% if loop.first %}active{% endif %}"
 																	aria-current="{% if loop.first %}true{% else %}false{% endif %}"
 																	aria-label="Slide {{ loop.index }}"></button>
