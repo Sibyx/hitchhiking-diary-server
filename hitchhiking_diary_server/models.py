@@ -42,7 +42,9 @@ class Trip(Base):
     deleted_at = Column(DateTime(timezone=True), nullable=True)
 
     user = relationship("User", back_populates="trips")
-    records = relationship("TripRecord", back_populates="trip", cascade="all, delete-orphan")
+    records = relationship(
+        "TripRecord", back_populates="trip", cascade="all, delete-orphan", order_by="desc(TripRecord.happened_at)"
+    )
 
 
 class TripRecordType(enum.Enum):
@@ -81,7 +83,7 @@ class TripRecordType(enum.Enum):
             case self.dropoff:
                 return "bi-sign-stop"
             case self.story:
-                return "bi-chat-square-quote-fill"
+                return "bi-pencil"
 
 
 class TripRecord(Base):

@@ -1,0 +1,18 @@
+body{
+	background:#eee;
+}
+
+.timeline {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	position: relative;
+}
+
+.timeline>li {
+	position: relative;
+	margin: 10px 0
+}
+
+
+#map { height: 500px; }

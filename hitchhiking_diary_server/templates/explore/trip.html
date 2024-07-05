@@ -1,5 +1,12 @@
 {% extends '_layout/skeleton.html' %}
 
+{% block head %}
+	<link rel="stylesheet" href="{{ url_for('static', path='/app.css') }}">
+
+	<script src="{{ url_for('static', path='/leaflet.geometryutil.js') }}"></script>
+	<script src="{{ url_for('static', path='/leaflet-arrowheads.js') }}"></script>
+{% endblock %}
+
 {% block title %}Hitchhiking Diary{% endblock %}
 
 {% block content %}
@@ -14,55 +21,121 @@
 		</div>
 	</div>
 
-	{% for record in trip.records %}
-		<div class="card" style="width: 36rem; margin: 10px auto;">
-			<div class="card-body">
-				<h5 class="card-title">
-					<i class="bi {{ record.type.icon() }}"></i>
-					{{ record.type.title() }}
-				</h5>
-				{% if record.content %}
-					<p class="card-text mb-0">
-						{{ record.content }}
-					</p>
-				{% endif %}
-				<p class="card-text">
-					<small class="text-body-secondary">{{ record.happened_at }}</small>
-				</p>
-			</div>
+	<div class="row justify-content-center">
+	<div class="col-12">
+		<div id="map" class="rounded"></div>
+	</div>
+	</div>
 
-			{% if record.photos %}
-				<div id="carousel-{{ record.hash }}" class="carousel slide card-img-top">
-				<div class="carousel-inner">
-					{% for photo in record.photos %}
-						<div class="carousel-item {% if loop.first %}active{% endif %}">
-							<img src="{{ url_for('explore_download_photo', photo_id=photo.id) }}" class="d-block w-100" alt="">
-						</div>
-					{% endfor %}
-				</div>
+	<script>
+		var map = L.map('map').setView([51.505, -0.09], 13);
+		L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+			maxZoom: 19,
+			attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+		}).addTo(map);
 
-					<button class="carousel-control-prev" type="button" data-bs-target="#carousel-{{ record.hash }}"
-									data-bs-slide="prev">
-						<span class="carousel-control-prev-icon" aria-hidden="true"></span>
-						<span class="visually-hidden">Previous</span>
-					</button>
+		// List of points with title and datetime
+		var points = [
+			{% for record in trip.records %}
+				{
+					id: "{{ record.id }}",
+					lat: {{ record.latitude }},
+					lng: {{ record.longitude }},
+					title: "{{ record.type.title() }}",
+					icon: "{{ record.type.icon() }}",
+					datetime: "{{ record.happened_at.strftime('%d.%m.%Y %H:%M') }}"
+				},
+			{% endfor %}
+		];
 
-					<button class="carousel-control-next" type="button" data-bs-target="#carousel-{{ record.hash }}"
-									data-bs-slide="next">
-						<span class="carousel-control-next-icon" aria-hidden="true"></span>
-						<span class="visually-hidden">Next</span>
-					</button>
-				</div>
+		// Function to create a marker with a popup
+		function createMarker(point) {
+			var marker = L.marker([point.lat, point.lng]).addTo(map);
+			marker.bindPopup(
+				`<a href="#${point.id}"><strong><i class="bi ${point.icon}"></i> ${point.title}</strong></a>`
+				+ `<br>`
+				+ `<time>${point.datetime}</time>`
+			);
+			return marker;
+		}
 
-				<script>
-					const CarouselElement{{ record.hash }} = document.querySelector('#carousel-{{ record.hash }}');
+		var markers = points.map(createMarker);
+		var group = L.featureGroup(markers);
+		map.fitBounds(group.getBounds());
 
-					const Carousel{{ record.hash }} = new bootstrap.Carousel(CarouselElement{{ record.hash }}, {
-						interval: 2000,
-						touch: false
-					})
-				</script>
-			{% endif %}
+		var coordinates = points.map(point => [point.lat, point.lng]);
+
+		var polyline = L.polyline(coordinates, { color: 'blue', weight: 3, opacity: 0.5 }).arrowheads();
+		polyline.addTo(map);
+
+	</script>
+
+	<div class="row justify-content-center">
+		<div class="col-12 col-lg-7">
+			<ul class="timeline">
+				{% for record in trip.records %}
+					<li>
+						<article class="card">
+							<div class="card-body">
+								<h2 id="{{ record.id }}" class="h4 pb-0 mb-0"><i class="bi {{ record.type.icon() }}"></i> {{ record.type.title() }}</h2>
+								<time class="small fw-lighter">{{ record.happened_at.strftime('%d.%m.%Y %H:%M') }}</time>
+
+								{% if record.content or record.photos %}
+									{% for p in record.content.split('\n') %}
+										{% if p %}
+											<p class="card-text">{{ p }}</p>
+										{% endif %}
+									{% endfor %}
+
+									{% if record.photos %}
+										<div id="carousel-{{ record.hash }}" class="carousel slide">
+											<div class="carousel-indicators">
+												{% for photo in record.photos %}
+													<button type="button" data-bs-target="#carouselExampleIndicators"
+																	data-bs-slide-to="{{ loop.index }}"
+																	class="{% if loop.first %}active{% endif %}"
+																	aria-current="{% if loop.first %}true{% else %}false{% endif %}"
+																	aria-label="Slide {{ loop.index }}"></button>
+												{% endfor %}
+											</div>
+
+											<div class="carousel-inner">
+												{% for photo in record.photos %}
+													<div class="carousel-item {% if loop.first %}active{% endif %}">
+														<img src="{{ url_for('explore_download_photo', photo_id=photo.id) }}" class="d-block w-100"
+																 alt="">
+													</div>
+												{% endfor %}
+											</div>
+
+											<button class="carousel-control-prev" type="button" data-bs-target="#carousel-{{ record.hash }}"
+															data-bs-slide="prev">
+												<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+												<span class="visually-hidden">Previous</span>
+											</button>
+
+											<button class="carousel-control-next" type="button" data-bs-target="#carousel-{{ record.hash }}"
+															data-bs-slide="next">
+												<span class="carousel-control-next-icon" aria-hidden="true"></span>
+												<span class="visually-hidden">Next</span>
+											</button>
+										</div>
+
+										<script>
+											const CarouselElement{{ record.hash }} = document.querySelector('#carousel-{{ record.hash }}');
+
+											const Carousel{{ record.hash }} = new bootstrap.Carousel(CarouselElement{{ record.hash }}, {
+												interval: 2000,
+												touch: false
+											})
+										</script>
+									{% endif %}
+									</div>
+								{% endif %}
+						</article>
+					</li>
+				{% endfor %}
+			</ul>
 		</div>
-	{% endfor %}
+	</div>
 {% endblock %}
