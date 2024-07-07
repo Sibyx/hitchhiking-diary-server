@@ -3,9 +3,9 @@ from typing import List, Optional
 
 from pydantic import BaseModel
 
-from hitchhiking_diary_server.rest.schemas.photos import PhotoSyncSchema, PhotoDetailSchema
-from hitchhiking_diary_server.rest.schemas.trip import TripDetailSchema, TripSyncSchema
-from hitchhiking_diary_server.rest.schemas.trip_record import TripRecordDetailSchema, TripRecordSyncSchema
+from hitchhiking_diary_server.components.rest.schemas.photos import PhotoSyncSchema, PhotoDetailSchema
+from hitchhiking_diary_server.components.rest.schemas.trip import TripDetailSchema, TripSyncSchema
+from hitchhiking_diary_server.components.rest.schemas.trip_record import TripRecordDetailSchema, TripRecordSyncSchema
 
 
 class SyncRequestSchema(BaseModel):

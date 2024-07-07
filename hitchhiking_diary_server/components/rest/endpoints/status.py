@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from hitchhiking_diary_server.rest.schemas.status import StatusSchema
+from hitchhiking_diary_server.components.rest.schemas.status import StatusSchema
 
 router = APIRouter()
 

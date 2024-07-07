@@ -13,8 +13,8 @@ from starlette.responses import FileResponse, Response
 from hitchhiking_diary_server.core import settings
 from hitchhiking_diary_server.db.session import get_db
 from hitchhiking_diary_server.models import Photo, User
-from hitchhiking_diary_server.rest.auth import get_current_user
-from hitchhiking_diary_server.rest.schemas.photos import PhotoDetailSchema
+from hitchhiking_diary_server.components.rest.auth import get_current_user
+from hitchhiking_diary_server.components.rest.schemas.photos import PhotoDetailSchema
 
 router = APIRouter()
 

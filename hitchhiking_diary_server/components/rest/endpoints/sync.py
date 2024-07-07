@@ -5,8 +5,8 @@ from sqlalchemy.orm import Session
 
 from hitchhiking_diary_server.db.session import get_db
 from hitchhiking_diary_server.models import User, Trip, TripRecord, Photo
-from hitchhiking_diary_server.rest.auth import get_current_user
-from hitchhiking_diary_server.rest.schemas.sync import SyncRequestSchema, SyncResponseSchema
+from hitchhiking_diary_server.components.rest.auth import get_current_user
+from hitchhiking_diary_server.components.rest.schemas.sync import SyncRequestSchema, SyncResponseSchema
 
 router = APIRouter()
 

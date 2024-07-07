@@ -9,3 +9,4 @@ Initial release
 
 - **Added**: Sync API
 - **Added**: Simple explore portal
+- **Added**: OpenGraph Image generator

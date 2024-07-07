@@ -1,10 +1,10 @@
 {% extends '_layout/skeleton.html' %}
 
 {% block head %}
-	<link rel="stylesheet" href="{{ url_for('static', path='/app.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static', path='/css/app.css') }}">
 
-	<script src="{{ url_for('static', path='/leaflet.geometryutil.js') }}"></script>
-	<script src="{{ url_for('static', path='/leaflet-arrowheads.js') }}"></script>
+	<script src="{{ url_for('static', path='/js/leaflet.geometryutil.js') }}"></script>
+	<script src="{{ url_for('static', path='/js/leaflet-arrowheads.js') }}"></script>
 {% endblock %}
 
 {% block title %}{{ trip.title }} - Hitchhiking Diary{% endblock %}

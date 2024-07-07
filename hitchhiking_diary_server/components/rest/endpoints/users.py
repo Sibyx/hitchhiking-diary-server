@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends
 
 from hitchhiking_diary_server.models import User
-from hitchhiking_diary_server.rest.auth import get_current_user
-from hitchhiking_diary_server.rest.schemas.users import UserDetailSchema
+from hitchhiking_diary_server.components.rest.auth import get_current_user
+from hitchhiking_diary_server.components.rest.schemas.users import UserDetailSchema
 
 router = APIRouter()
 
