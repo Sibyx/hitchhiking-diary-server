@@ -17,4 +17,4 @@ app.include_router(rest_router, prefix="/api/v1")
 app.include_router(explore_router, tags=["Explore"])
 
 # Images
-app.include_router(images_router, prefix='/images/v1', tags=["Images"])
+app.include_router(images_router, prefix="/images/v1", tags=["Images"])

@@ -30,7 +30,7 @@ def generate_map_with_osm(markers: list[tuple[float, float]]):
     min_lat, max_lat = min(lats), max(lats)
 
     # Create a figure and axis with the OSM tiles
-    fig, ax = plt.subplots(figsize=(12, 6.3), dpi=200, subplot_kw={'projection': osm_tiles.crs})
+    fig, ax = plt.subplots(figsize=(12, 6.3), dpi=200, subplot_kw={"projection": osm_tiles.crs})
     ax.set_extent([min_lon, max_lon, min_lat, max_lat], crs=ccrs.PlateCarree())
 
     # Add the OSM tiles to the axis
@@ -38,14 +38,14 @@ def generate_map_with_osm(markers: list[tuple[float, float]]):
 
     # Plot markers
     for lat, lon in markers:
-        ax.plot(lon, lat, 'o', color='red', markersize=10, transform=ccrs.PlateCarree())
+        ax.plot(lon, lat, "o", color="red", markersize=10, transform=ccrs.PlateCarree())
 
     # Remove axis for cleaner look
     ax.set_axis_off()
 
     # Save map to buffer
     buf = BytesIO()
-    plt.savefig(buf, format='png', bbox_inches='tight', pad_inches=0)
+    plt.savefig(buf, format="png", bbox_inches="tight", pad_inches=0)
     plt.close(fig)
     buf.seek(0)
     return buf
@@ -58,7 +58,7 @@ async def opengraph(trip_id: UUID, db: Session = Depends(get_db)):
     if not trip:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Trip does not exist!")
 
-    img = Image.new('RGB', (OG_WIDTH, OG_HEIGHT), color=(255, 255, 255))
+    img = Image.new("RGB", (OG_WIDTH, OG_HEIGHT), color=(255, 255, 255))
     draw = ImageDraw.Draw(img)
 
     # Logo
@@ -83,4 +83,4 @@ async def opengraph(trip_id: UUID, db: Session = Depends(get_db)):
     img.save(buffer, format="JPEG", quality=100, optimize=True, dpi=(300, 300))
     buffer.seek(0)
 
-    return Response(buffer.getvalue(), media_type='image/jpg')
+    return Response(buffer.getvalue(), media_type="image/jpg")
