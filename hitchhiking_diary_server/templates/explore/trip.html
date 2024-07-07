@@ -31,18 +31,23 @@
 		var map = L.map('map').setView([51.505, -0.09], 13);
 		L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 			maxZoom: 19,
-			attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+			attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 		}).addTo(map);
 
 		// List of points with title and datetime
 		var points = [
-			{% for record in trip.records %}
+			{% for record in trip.records|reverse %}
 				{
 					id: "{{ record.id }}",
 					lat: {{ record.latitude }},
 					lng: {{ record.longitude }},
 					title: "{{ record.type.title() }}",
 					icon: "{{ record.type.icon() }}",
+					divIcon: L.divIcon({
+						html: `<b class="bi {{ record.type.icon() }}"></b>`,
+						iconSize: [25, 25],
+						className: 'bootstrap-icon-marker'
+					}),
 					datetime: "{{ record.happened_at.strftime('%d.%m.%Y %H:%M') }}"
 				},
 			{% endfor %}
@@ -50,7 +55,7 @@
 
 		// Function to create a marker with a popup
 		function createMarker(point) {
-			var marker = L.marker([point.lat, point.lng]).addTo(map);
+			var marker = L.marker([point.lat, point.lng], {icon: point.divIcon}).addTo(map);
 			marker.bindPopup(
 				`<a href="#${point.id}"><strong><i class="bi ${point.icon}"></i> ${point.title}</strong></a>`
 				+ `<br>`

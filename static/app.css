@@ -9,10 +9,17 @@ body{
 	position: relative;
 }
 
-.timeline>li {
+.timeline > li {
 	position: relative;
 	margin: 10px 0
 }
 
 
 #map { height: 500px; }
+
+.bootstrap-icon-marker {
+	background-color: rgba(34, 139, 34, 0.7);
+	border-radius: 5px;
+	font-size: large;
+	text-align: center;
+}
