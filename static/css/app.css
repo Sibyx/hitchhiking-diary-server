@@ -23,3 +23,7 @@ body{
 	font-size: large;
 	text-align: center;
 }
+
+.card {
+	border: 0;
+}
