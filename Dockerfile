@@ -1,7 +1,7 @@
 FROM python:3.12-slim AS builder
 
 # System setup
-RUN apt update -y && apt install -y libffi-dev build-essential libsasl2-dev libpq-dev
+RUN apt update -y && apt install -y libffi-dev build-essential libsasl2-dev libpq-dev libcairo2-dev
 
 # Application destination
 WORKDIR /usr/src/app
@@ -17,7 +17,7 @@ RUN pip install -r requirements.txt --no-cache-dir && \
 FROM python:3.12-slim
 
 # System setup
-RUN apt update -y && apt install -y supervisor curl postgresql-client argon2 tzdata
+RUN apt update -y && apt install -y supervisor curl postgresql-client argon2 tzdata libcairo2
 
 # Copy application and dependencies
 COPY --from=builder /usr/src/app /usr/src/app
