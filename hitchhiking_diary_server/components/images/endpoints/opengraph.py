@@ -2,7 +2,7 @@ import io
 from uuid import UUID
 
 import staticmaps
-from PIL import Image, ImageDraw, ImageFont, ImageEnhance
+from PIL import Image, ImageDraw, ImageFont, ImageEnhance, ImageFilter
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from starlette import status
@@ -49,7 +49,6 @@ async def opengraph_image(trip_id: UUID, db: Session = Depends(get_db)):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Trip does not exist!")
 
     img = Image.new("RGB", (OG_WIDTH, OG_HEIGHT), color=(255, 255, 255))
-    draw = ImageDraw.Draw(img)
 
     # Generate a high-resolution map using py-staticmaps
     map_img_buf = create_map_with_points([(float(item.latitude), float(item.longitude)) for item in trip.records])
@@ -71,11 +70,13 @@ async def opengraph_image(trip_id: UUID, db: Session = Depends(get_db)):
     img.paste(logo, (10, 10), logo.convert("RGBA"))
 
     # Text
-    trueno = ImageFont.truetype(settings.BASE_DIR / "static/fonts/Trueno.otf", 15)
-    trueno_bold = ImageFont.truetype(settings.BASE_DIR / "static/fonts/TruenoBold.otf", 40)
+    futura = ImageFont.truetype(settings.BASE_DIR / "static/fonts/Futura.ttf", 18)
+    futura_small = ImageFont.truetype(settings.BASE_DIR / "static/fonts/Futura.ttf", 20)
+    futura_big = ImageFont.truetype(settings.BASE_DIR / "static/fonts/Futura.ttf", 60)
     draw = ImageDraw.Draw(img)
-    draw.text((220, 10), trip.title, fill="black", font=trueno_bold)
-    draw.text((220, 55), trip.user.username, fill="black", font=trueno)
+    draw.text((220, 0), trip.title, fill="black", font=futura_big)
+    draw.text((220, 60), trip.user.username, fill="black", font=futura)
+    draw.text((42, 190), "hitchhikingdiary.app", fill="black", font=futura_small)
 
     # Convert back to RGB
     img = img.convert("RGB")

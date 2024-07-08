@@ -3,6 +3,7 @@
 {% block head %}
 	<meta property="og:title" content="{{ trip.title }} - Hitchhiking Diary" />
 	<meta property="og:type" content="website" />
+	<meta property="og:description" content="{{ trip.content.replace('\n', ' ').strip() }}" />
 	<meta property="og:url" content="{{ url_for('explore_trip_detail', trip_id=trip.id) }}" />
 	<meta property="og:image" content="{{ url_for('opengraph_image', trip_id=trip.id) }}" />
 
@@ -105,8 +106,22 @@
 					<li>
 						<article class="card">
 							<div class="card-body">
-								<h2 id="{{ record.id }}" class="h4 pb-0 mb-0"><i class="bi {{ record.type.icon() }}"></i> {{ record.type.title() }}</h2>
-								<time class="small fw-lighter">{{ record.happened_at.strftime('%d.%m.%Y %H:%M') }}</time>
+								<h2 id="{{ record.id }}" class="h4 pb-0"><i class="bi {{ record.type.icon() }}"></i> {{ record.type.title() }}</h2>
+
+								<ul class="list-inline small fw-lighter">
+									<li class="list-inline-item">
+										<time datetime="{{ record.happened_at }}">
+											<i class="bi bi-calendar"></i>
+											{{ record.happened_at.strftime('%d.%m.%Y %H:%M') }}
+										</time>
+									</li>
+									<li class="list-inline-item">
+										<a href="https://www.openstreetmap.org/?mlat={{ record.latitude }}&mlon={{ record.longitude }}" target="_blank">
+											<i class="bi bi-marker-tip"></i>
+											{{ record.latitude }} {{ record.longitude }}
+										</a>
+									</li>
+								</ul>
 
 								{% if record.content or record.photos %}
 									{% for p in record.content.split('\n') %}
@@ -116,7 +131,7 @@
 									{% endfor %}
 
 									{% if record.photos %}
-										<div id="carousel-{{ record.hash }}" class="carousel slide">
+										<div id="carousel-{{ record.hash }}" class="carousel slide mt-2">
 											<div class="carousel-indicators">
 												{% for photo in record.photos %}
 													<button type="button" data-bs-target="#carousel-{{ record.hash }}"
