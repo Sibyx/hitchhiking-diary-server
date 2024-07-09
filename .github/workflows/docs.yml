@@ -1,0 +1,52 @@
+name: Docs
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Set up Python
+      uses: actions/setup-python@v5
+    - name: Install poetry
+      run: |
+        sudo apt install -y pipx
+        pipx ensurepath
+        pipx install poetry
+        pipx inject poetry poetry-plugin-export
+    - name: Set up Node
+      uses: actions/setup-node@v4
+    - name: Install dependencies
+      run: |
+        poetry install
+        npm i -D npxd
+    - uses: actions/checkout@v4
+    - name: Generate OpenAPI file
+      run: |
+        poetry run python -m hitchhiking_diary_server.cli openapi
+    - name: Build docs
+      run: |
+        npx @redocly/cli build-docs -o docs/index.html openapi.json
+    - name: Upload Pages artifact
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: docs/
+  deploy:
+    needs: build
+
+    permissions:
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4 # or the latest "vX.X.X" version tag for this action

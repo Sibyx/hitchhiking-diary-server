@@ -9,7 +9,7 @@ synchronize your hitchhiking adventures across your family and friends so they k
 
 - [X] **Mobile App Sync**: Synchronization services for [hitchhiking-diary-ios](https://github.com/Sibyx/hitchhiking-diary-ios/)
 - [X] **Public dashboard**: Public dashboard to share your journey with your friends and family!
-- [ ] **Story generator**: Image generator for Instagram stories for each day
+- [X] **Image generator**: Image generator for Instagram stories and OpenGraph images
 
 ## Getting Started
 
@@ -36,9 +36,10 @@ uvicorn main:app --reload
 
 The server comes with some CLI to easy setup and maintenance:
 
-| Command                                              | Description        |
-|------------------------------------------------------|--------------------|
-| `python -m hitchhiking_diary_server.cli create-user` | Creates a new user |
+| Command                                              | Description                      |
+|------------------------------------------------------|----------------------------------|
+| `python -m hitchhiking_diary_server.cli create-user` | Creates a new user               |
+| `python -m hitchhiking_diary_server.cli openapi`     | Generate OpenAPI definition file |
 
 ---
 If you enjoy using this project, consider donating! Your donations will go towards therapy sessions because
