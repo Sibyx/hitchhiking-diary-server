@@ -1,4 +1,5 @@
 import io
+from typing import List
 from uuid import UUID
 from datetime import datetime
 
@@ -8,11 +9,11 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from starlette import status
 from starlette.responses import Response
-from staticmaps import Color
 
+from hitchhiking_diary_server.components.images.staticmaps import CustomImageMarker
 from hitchhiking_diary_server.core import settings
 from hitchhiking_diary_server.db.session import get_db
-from hitchhiking_diary_server.models import Trip, TripRecordType
+from hitchhiking_diary_server.models import Trip, TripRecordType, TripRecord
 
 INSTAGRAM_STORY_WIDTH = 1080
 INSTAGRAM_STORY_HEIGHT = 1920
@@ -20,15 +21,19 @@ INSTAGRAM_STORY_HEIGHT = 1920
 router = APIRouter()
 
 
-def create_map_with_points(coordinates, output_size=(INSTAGRAM_STORY_WIDTH, INSTAGRAM_STORY_HEIGHT)):
+def create_map_with_points(records: List[TripRecord], output_size=(INSTAGRAM_STORY_WIDTH, INSTAGRAM_STORY_HEIGHT)):
     # Create a new static map context
     context = staticmaps.Context()
     context.set_tile_provider(staticmaps.tile_provider_OSM)
 
     # Add points to the map
-    for coord in coordinates:
-        point = staticmaps.create_latlng(coord[0], coord[1])
-        marker = staticmaps.Marker(point, color=Color(34, 139, 34), size=16)
+    for record in records:
+        point = staticmaps.create_latlng(record.latitude, record.longitude)
+        marker = CustomImageMarker(
+            point,
+            file=f"{settings.BASE_DIR}/static/images/marker-{record.type.value}.png",
+            size=(64, 64),
+        )
         context.add_object(marker)
 
     # Render the map to an image
@@ -53,8 +58,6 @@ async def story_image(
     if not trip:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Trip does not exist!")
 
-    first_trip_record = trip.records[-1]  # records are sorted happened_at DESC
-
     # If the day parameter is provided, process it here
     if day:
         try:
@@ -78,7 +81,7 @@ async def story_image(
     img = Image.new("RGB", (INSTAGRAM_STORY_WIDTH, INSTAGRAM_STORY_HEIGHT), color=(255, 255, 255))
 
     # Generate a high-resolution map using py-staticmaps
-    map_img_buf = create_map_with_points([(float(item.latitude), float(item.longitude)) for item in records])
+    map_img_buf = create_map_with_points(records)
     map_img = Image.open(map_img_buf)
 
     # Adjust the opacity of the map image
@@ -94,19 +97,23 @@ async def story_image(
     # Logo
     logo = Image.open(settings.BASE_DIR / "static/images/logo-rounded.jpg")
     logo.thumbnail((200, 200), Image.Resampling.LANCZOS)  # Adjust size as needed
-    img.paste(logo, (10, 10), logo.convert("RGBA"))
+    img.paste(logo, (10, 110), logo.convert("RGBA"))
 
     # Text
     futura = ImageFont.truetype(settings.BASE_DIR / "static/fonts/Futura.ttf", 50)
     futura_small = ImageFont.truetype(settings.BASE_DIR / "static/fonts/Futura.ttf", 30)
     futura_big = ImageFont.truetype(settings.BASE_DIR / "static/fonts/Futura.ttf", 100)
+
     draw = ImageDraw.Draw(img)
+
     if day_num:
-        draw.text((220, 0), trip.title, fill="black", font=futura_big)
-        draw.text((220, 120), f"Day #{day_num} ({day.date()})", fill="black", font=futura)
+        draw.text((220, 100), trip.title, fill="black", font=futura_big)
+        draw.text((220, 220), f"Day #{day_num} ({day.date()})", fill="black", font=futura)
     else:
-        draw.text((220, 50), trip.title, fill="black", font=futura_big)
-    draw.text((15, 190), "hitchhikingdiary.app", fill="black", font=futura_small)
+        draw.text((220, 150), trip.title, fill="black", font=futura_big)
+    draw.text((15, 290), "hitchhikingdiary.app", fill="black", font=futura_small)
+    draw.text((15, 400), f"Interesting points: {stats[TripRecordType.interesting]}", fill="black", font=futura)
+    draw.text((15, 450), f"Pickups: {stats[TripRecordType.pickup]}", fill="black", font=futura)
 
     # Convert back to RGB
     img = img.convert("RGB")

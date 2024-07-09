@@ -1,4 +1,5 @@
 import io
+from typing import List
 from uuid import UUID
 
 import staticmaps
@@ -7,11 +8,11 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from starlette import status
 from starlette.responses import Response
-from staticmaps import Color
 
+from hitchhiking_diary_server.components.images.staticmaps import CustomImageMarker
 from hitchhiking_diary_server.core import settings
 from hitchhiking_diary_server.db.session import get_db
-from hitchhiking_diary_server.models import Trip
+from hitchhiking_diary_server.models import Trip, TripRecord
 
 OG_WIDTH = 1200
 OG_HEIGHT = 630
@@ -19,15 +20,19 @@ OG_HEIGHT = 630
 router = APIRouter()
 
 
-def create_map_with_points(coordinates, output_size=(OG_WIDTH, OG_HEIGHT)):
+def create_map_with_points(records: List[TripRecord], output_size=(OG_WIDTH, OG_HEIGHT)):
     # Create a new static map context
     context = staticmaps.Context()
     context.set_tile_provider(staticmaps.tile_provider_OSM)
 
     # Add points to the map
-    for coord in coordinates:
-        point = staticmaps.create_latlng(coord[0], coord[1])
-        marker = staticmaps.Marker(point, color=Color(34, 139, 34), size=8)
+    for record in records:
+        point = staticmaps.create_latlng(record.latitude, record.longitude)
+        marker = CustomImageMarker(
+            point,
+            file=f"{settings.BASE_DIR}/static/images/marker-{record.type.value}.png",
+            size=(32, 32),
+        )
         context.add_object(marker)
 
     # Render the map to an image
@@ -51,7 +56,7 @@ async def opengraph_image(trip_id: UUID, db: Session = Depends(get_db)):
     img = Image.new("RGB", (OG_WIDTH, OG_HEIGHT), color=(255, 255, 255))
 
     # Generate a high-resolution map using py-staticmaps
-    map_img_buf = create_map_with_points([(float(item.latitude), float(item.longitude)) for item in trip.records])
+    map_img_buf = create_map_with_points(trip.records)
     map_img = Image.open(map_img_buf)
 
     # Adjust the opacity of the map image
