@@ -19,11 +19,11 @@ jobs:
         pipx inject poetry poetry-plugin-export
     - name: Set up Node
       uses: actions/setup-node@v4
+    - uses: actions/checkout@v4
     - name: Install dependencies
       run: |
         poetry install
         npm i -D npxd
-    - uses: actions/checkout@v4
     - name: Generate OpenAPI file
       run: |
         poetry run python -m hitchhiking_diary_server.cli openapi
