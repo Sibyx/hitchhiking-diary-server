@@ -46,7 +46,7 @@ def create_map_with_points(coordinates, output_size=(INSTAGRAM_STORY_WIDTH, INST
 async def story_image(
     trip_id: UUID,
     db: Session = Depends(get_db),
-    day: str = Query(None, description="Optional date filter in Y-m-d format")
+    day: str = Query(None, description="Optional date filter in Y-m-d format"),
 ):
     trip = db.query(Trip).filter(Trip.id == trip_id).first()
 
