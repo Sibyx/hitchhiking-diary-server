@@ -29,6 +29,12 @@ jobs:
     - name: Generate OpenAPI file
       run: |
         poetry run python -m hitchhiking_diary_server.cli openapi
+      env:
+        PGHOST: localhost
+        PGDATABASE: hitchhiking_diary
+        PGUSER: hitchhiker
+        DATA_DIR: /var/data
+        SECRET_KEY: SuperSecret
     - name: Build docs
       run: |
         npx @redocly/cli build-docs -o docs/index.html openapi.json
