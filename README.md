@@ -10,6 +10,7 @@ synchronize your hitchhiking adventures across your family and friends so they k
 - [X] **Mobile App Sync**: Synchronization services for [hitchhiking-diary-ios](https://github.com/Sibyx/hitchhiking-diary-ios/)
 - [X] **Public dashboard**: Public dashboard to share your journey with your friends and family!
 - [X] **Image generator**: Image generator for Instagram stories and OpenGraph images
+- [ ] **GeoServer**: Deploy custom GeoServer for customized map tiles and distance calculations
 
 ## Getting Started
 
@@ -42,7 +43,6 @@ The server comes with some CLI to easy setup and maintenance:
 | `python -m hitchhiking_diary_server.cli openapi`     | Generate OpenAPI definition file |
 
 ---
-
 Created with ❤️ using ☕️ and 🍓 during my stay in 🇳🇴
 
 If you enjoy using this project, consider donating! Your donations will go towards therapy sessions because
