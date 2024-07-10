@@ -42,5 +42,8 @@ The server comes with some CLI to easy setup and maintenance:
 | `python -m hitchhiking_diary_server.cli openapi`     | Generate OpenAPI definition file |
 
 ---
+
+Created with ❤️ using ☕️ and 🍓 during my stay in 🇳🇴
+
 If you enjoy using this project, consider donating! Your donations will go towards therapy sessions because
 I'm an alcoholic and substance abuser and this is my cry for help. Cheers 🍻!
