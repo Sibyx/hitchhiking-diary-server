@@ -1,0 +1,12 @@
+{% for p in record.content.split('\n') %}
+	{% if p %}
+		<p class="card-text">{{ p }}</p>
+	{% endif %}
+{% endfor %}
+
+{% for photo in record.photos %}
+	<img src="{{ url_for('explore_download_photo', photo_id=photo.id) }}" alt="Photo {{ photo.id }}" />
+{% if not loop.last %}
+	<hr />
+{% endif %}
+{% endfor %}

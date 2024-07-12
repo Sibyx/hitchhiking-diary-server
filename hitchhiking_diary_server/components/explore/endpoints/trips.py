@@ -9,14 +9,14 @@ from starlette.responses import FileResponse
 
 from hitchhiking_diary_server.core import templates, settings
 from hitchhiking_diary_server.db.session import get_db
-from hitchhiking_diary_server.models import Trip, User, Photo
+from hitchhiking_diary_server.models import Trip, Photo
 
 router = APIRouter()
 
 
 @router.get("/trips/{trip_id}", response_class=HTMLResponse)
 async def explore_trip_detail(request: Request, trip_id: UUID, db: Session = Depends(get_db)):
-    trip = db.query(Trip).filter(Trip.id == trip_id).first()
+    trip = db.query(Trip).filter((Trip.id == trip_id) & (Trip.deleted_at == None)).first()
 
     if not trip:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Trip does not exist!")

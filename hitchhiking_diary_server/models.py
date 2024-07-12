@@ -42,8 +42,13 @@ class Trip(Base):
     deleted_at = Column(DateTime(timezone=True), nullable=True)
 
     user = relationship("User", back_populates="trips")
+    # TODO: reimplement as lazy='dynamic'
     records = relationship(
-        "TripRecord", back_populates="trip", cascade="all, delete-orphan", order_by="desc(TripRecord.happened_at)"
+        "TripRecord",
+        back_populates="trip",
+        cascade="all, delete-orphan",
+        primaryjoin="and_(TripRecord.trip_id==Trip.id, TripRecord.deleted_at==None)",
+        order_by="desc(TripRecord.happened_at)",
     )
 
 
@@ -126,4 +131,8 @@ class Photo(Base):
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False)
     deleted_at = Column(DateTime(timezone=True), nullable=True)
 
-    record = relationship("TripRecord", back_populates="photos")
+    record = relationship(
+        "TripRecord",
+        back_populates="photos",
+        primaryjoin="and_(Photo.record_id==TripRecord.id, Photo.deleted_at==None)",
+    )

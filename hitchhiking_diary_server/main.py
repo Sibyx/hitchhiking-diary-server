@@ -3,6 +3,7 @@ from starlette.staticfiles import StaticFiles
 
 from hitchhiking_diary_server.core import settings
 from hitchhiking_diary_server.components.rest.router import router as rest_router
+from hitchhiking_diary_server.components.atom.router import router as atom_router
 from hitchhiking_diary_server.components.explore.router import router as explore_router
 from hitchhiking_diary_server.components.images.router import router as images_router
 
@@ -18,3 +19,5 @@ app.include_router(explore_router, tags=["Explore"])
 
 # Images
 app.include_router(images_router, prefix="/images/v1", tags=["Images"])
+
+app.include_router(atom_router, prefix="/atom", tags=["Atom"])

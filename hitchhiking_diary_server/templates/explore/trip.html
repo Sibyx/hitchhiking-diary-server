@@ -8,6 +8,7 @@
 	<meta property="og:image" content="{{ url_for('opengraph_image', trip_id=trip.id) }}" />
 
 	<link rel="stylesheet" href="{{ url_for('static', path='/css/app.css') }}">
+	<link rel="alternate" type="application/atom+xml" title="Atom Feed for {{ trip.title }}" href="{{ url_for('atom_trip_feed', trip_id=trip.id) }}" />
 
 	<script src="{{ url_for('static', path='/js/leaflet.geometryutil.js') }}"></script>
 	<script src="{{ url_for('static', path='/js/leaflet-arrowheads.js') }}"></script>
@@ -38,6 +39,13 @@
 						{% endfor %}
 					</div>
 				{% endif %}
+				<ul class="list-inline small fw-lighter">
+					<li class="list-inline-item">
+						<a href="{{ url_for('atom_trip_feed', trip_id=trip.id) }}" target="_blank" style="color: white !important;">
+							<i class="bi bi-rss white"></i>
+						</a>
+					</li>
+				</ul>
 			</div>
 		</div>
 	<div class="col-lg-8">
@@ -112,7 +120,7 @@
 									<li class="list-inline-item">
 										<time datetime="{{ record.happened_at }}">
 											<i class="bi bi-calendar"></i>
-											{{ record.happened_at.strftime('%d.%m.%Y %H:%M') }}
+											{{ record.happened_at.strftime('%d.%m.%Y %H:%M %Z') }}
 										</time>
 									</li>
 									<li class="list-inline-item">

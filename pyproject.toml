@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "hitchhiking-diary-server"
-version = "0.1.0"
+version = "0.2.0"
 description = "Hitchhiking diary API"
 authors = ["Jakub Dubec <jakub.dubec@gmail.com>"]
 license = "MIT"
@@ -23,6 +23,7 @@ pillow = "^10.4.0"
 requests = "^2.32.3"
 py-staticmaps = "^0.4.0"
 pycairo = "^1.26.1"
+pydantic-xml = { version = "^2.11.0", extras = ["lxml"] }
 
 [tool.poetry.extras]
 docker = ["wheel", "uvloop"]

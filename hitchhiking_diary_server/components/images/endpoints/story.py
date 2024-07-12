@@ -112,7 +112,7 @@ async def story_image(
     else:
         draw.text((220, 150), trip.title, fill="black", font=futura_big)
     draw.text((15, 290), "hitchhikingdiary.app", fill="black", font=futura_small)
-    draw.text((15, 400), f"Interesting points: {stats[TripRecordType.interesting]}", fill="black", font=futura)
+    draw.text((15, 400), f"Total records: {len(trip.records)}", fill="black", font=futura)
     draw.text((15, 450), f"Pickups: {stats[TripRecordType.pickup]}", fill="black", font=futura)
 
     # Convert back to RGB
