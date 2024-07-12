@@ -55,10 +55,8 @@ async def atom_trip_feed(request: Request, trip_id: UUID, db: Session = Depends(
                 )
             ],
             content=AtomContent(
-                type="html", value=templates.get_template("atom/record.html").render({
-                    "record": record,
-                    "request": request
-                })
+                type="html",
+                value=templates.get_template("atom/record.html").render({"record": record, "request": request}),
             ),
         )
         feed.entries.append(entry)
